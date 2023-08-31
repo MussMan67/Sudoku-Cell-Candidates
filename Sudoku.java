@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Sudoku {
     private int[][] sudoku;
@@ -15,23 +15,22 @@ public class Sudoku {
     }
 
     public int[] Row(int row){        
-        return sudoku[row-1];
+        return sudoku[row];
     }
     public int[] Square(int square){
         int[] squareBox = {0,0,0,0,0,0,0,0,0};
         int count = 0;
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
-                squareBox[count] = sudoku[i + 3*(square%3 - 1)][j + 3*(countMultiples(square, 3))];
+                squareBox[count] = sudoku[i + 3*(countMultiples(square, 3))][j + 3*(square%3)];
                 count++;
             }
         }
-
         return squareBox;
     }
     public int countMultiples(int base, int subtractor){
         int count = 0;
-        while(base>3){
+        while(base>2){
             base-=subtractor;
             count++;
         }
@@ -66,22 +65,24 @@ public class Sudoku {
     }
 
     public int findSquare(int row, int col){
-        return (((row/3)*3)+(col/3 + 1));
+        return (((row/3)*3)+(col/3 + 1)-1);
     }
 
-    public ArrayList<Integer> cellCandidates(int row, int col){
-        ArrayList<Integer> candList = new ArrayList<>();
-        candList.add(1);candList.add(2);candList.add(3);candList.add(4);candList.add(5);candList.add(6);candList.add(7);candList.add(8);candList.add(9);
-        int[] r = Row(row);
-        int[] c = Column(col);
-        int[] s = Square(findSquare(row, col));
-        for(int num : candList){
+    public int[] cellCandidates(int row, int col){
+        int[] candList = {1,2,3,4,5,6,7,8,9};
+        int count = 0;
+        for(int num = 1; num<10;num++){
             if(checkForInColumn(num, col) || checkForInRow(num, row) || checkForInSquare(num, findSquare(row, col))){
-                candList.remove(candList.indexOf(num));
+                candList[count]=0;
             }
+            /*if(checkForInSquare(num, findSquare(row, col))){
+                System.out.println(num+": "+row+", "+col);
+                System.out.println((findSquare(row, col)));
+            }*/
+            count++;
         }
-        return candList;
-
+        Arrays.sort(candList);
+        return (candList);
     }
 
 }
